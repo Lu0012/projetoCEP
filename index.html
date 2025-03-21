@@ -71,7 +71,7 @@
         <p><strong>Bairro:</strong> <span id="resultBairro"></span></p>
         <p><strong>Cidade:</strong> <span id="resultCidade"></span></p>
         <p><strong>Estado:</strong> <span id="resultEstado"></span></p>
-        <p><strong>Regiao:</strong>  <span id="resultregiao"></span></p> 
+        <p><strong>Regiao:</strong>  <span id="resultRegiao"></span></p> 
         
       
     </div>
@@ -104,6 +104,8 @@
                     resultEstado.textContent = data.uf;
                     resultDiv.style.display = 'block';
                     resultRegiao.textContent = data.regiao;
+                    resultDiv.style.display = 'block';
+                  
                 }
             } catch (error) {
                 console.error('Erro ao consultar CEP:', error);

@@ -14,6 +14,11 @@ app.get('/', (req, res) => {
 app.get('/cep/:cep', async (req, res) => {
     const { cep } = req.params;
 
+    // Validação do formato do CEP
+    if (!/^\d{8}$/.test(cep)) {
+        return res.status(400).json({ error: 'Formato de CEP inválido. O CEP deve conter exatamente 8 dígitos.' });
+    }
+
     try {
         // Fazendo a requisição para a API do ViaCEP
         const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
@@ -28,6 +33,13 @@ app.get('/cep/:cep', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Erro ao buscar CEP:', error);
+
+        // Tratando erros específicos da API ViaCEP
+        if (error.response && error.response.status === 400) {
+            return res.status(400).json({ error: 'Formato de CEP inválido' });
+        }
+
+        // Erro genérico
         res.status(500).json({ error: 'Erro ao buscar CEP' });
     }
 });
@@ -38,4 +50,5 @@ if (require.main === module) {
         console.log(`Servidor rodando na porta ${PORT}`);
     });
 }
+
 module.exports = app;

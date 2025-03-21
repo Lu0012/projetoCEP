@@ -29,18 +29,26 @@ describe('Testes da API de CEP', () => {
     // aqui colocaremos os demais testes
 });
 
-//Teste para um CEP inválido
-it('Deve retornar erro para um CEP inválido' , async() => {
-const response = await request (app)
-.get('/cep/00000000')
-.expect(404); //Espera um status 404 Not Found
+// Teste para um CEP inválido
+it('Deve retornar um erro para um CEP inválido', async () => {
+    const response = await request(app)
+        .get('/cep/00000000') // CEP inválido
+        .expect(404); // Espera um status 404 Not Found
 
-//Verifica a Mensagem de erro
-expect (response.body).toEqual({error: 'CEP não encontrado'})
+    // Verifica se a mensagem de erro está correta
+    expect(response.body).toEqual({
+        error: 'CEP não encontrado'
+    });
 });
 
-//Teste para um CEP mal formato 
-it('Deve retornar erro para um CEP mal formatado' , async () => {
-   const response = await request (app)
-get('/cep/123')
+// Teste para um CEP mal formatado
+it('Deve retornar um erro para um CEP mal formatado', async () => {
+    const response = await request(app)
+        .get('/cep/12345') // CEP mal formatado
+        .expect(400); // Espera um status 400 Bad Request
+
+    // Verifica se a mensagem de erro está correta
+    expect(response.body).toEqual({
+        error: 'Formato de CEP inválido. O CEP deve conter exatamente 8 dígitos.'
+    });
 });

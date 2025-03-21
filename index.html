@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de CEP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta de CEP</h1>
+    <form id="cepForm">
+        <label for="cep">Digite o CEP:</label>
+        <input type="text" id="cep" name="cep" placeholder="Ex: 01001000" required>
+        <button type="submit">Consultar</button>
+    </form>
+
+    <div id="result" style="display: none;">
+        <h2>Resultado:</h2>
+        <p><strong>CEP:</strong> <span id="resultCep"></span></p>
+        <p><strong>Logradouro:</strong> <span id="resultLogradouro"></span></p>
+        <p><strong>Bairro:</strong> <span id="resultBairro"></span></p>
+        <p><strong>Cidade:</strong> <span id="resultCidade"></span></p>
+        <p><strong>Estado:</strong> <span id="resultEstado"></span></p>
+        <p><strong>Regiao:</strong>  <span id="resultregiao"></span></p> 
+        
+      
+    </div>
+
+    <script>
+        document.getElementById('cepForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+
+            const cep = document.getElementById('cep').value;
+            const resultDiv = document.getElementById('result');
+            const resultCep = document.getElementById('resultCep');
+            const resultLogradouro = document.getElementById('resultLogradouro');
+            const resultBairro = document.getElementById('resultBairro');
+            const resultCidade = document.getElementById('resultCidade');
+            const resultEstado = document.getElementById('resultEstado');
+            const resultRegiao = document.getElementById('resultRegiao');
+
+            try {
+                const response = await fetch(`http://localhost:3000/cep/${cep}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    resultDiv.style.display = 'none';
+                } else {
+                    resultCep.textContent = data.cep;
+                    resultLogradouro.textContent = data.logradouro;
+                    resultBairro.textContent = data.bairro;
+                    resultCidade.textContent = data.localidade;
+                    resultEstado.textContent = data.uf;
+                    resultDiv.style.display = 'block';
+                    resultRegiao.textContent = data.regiao;
+                }
+            } catch (error) {
+                console.error('Erro ao consultar CEP:', error);
+                alert('Erro ao consultar CEP. Tente novamente.');
+                resultDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
